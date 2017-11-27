@@ -10,46 +10,45 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace dotnetcore.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/{containerName}")]
     public class BlobStorageController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly CloudBlobContainer _blobContainer;
+        private readonly CloudBlobClient _blobClient;
 
         public BlobStorageController(IConfiguration configuration)
         {
             _configuration = configuration;
-            var account = CloudStorageAccount.Parse(configuration["StorageConnectionString"]);
-            var blobClient = account.CreateCloudBlobClient();
+            _blobClient = CloudStorageAccount.Parse(_configuration["StorageConnectionString"])
+                                             .CreateCloudBlobClient();
+        }
 
-            _blobContainer = blobClient.GetContainerReference("blobcontainer");
-            _blobContainer.CreateIfNotExistsAsync().Wait();
-
-            _blobContainer.SetPermissionsAsync(new BlobContainerPermissions
-            {
-                PublicAccess = BlobContainerPublicAccessType.Blob
-            }).Wait();
+        private CloudBlobContainer GetContainer()
+        {
+            var blobContainer = _blobClient.GetContainerReference(ContainerName());
+            blobContainer.CreateIfNotExistsAsync().Wait();
+            return blobContainer;
         }
 
         [HttpGet]
         public IEnumerable<string> Get()
         {
             BlobContinuationToken token = null;
-            var data = _blobContainer.ListBlobsSegmentedAsync(token);
-            
+            var data = GetContainer().ListBlobsSegmentedAsync(token);
+
             return data.Result.Results.OfType<CloudBlockBlob>().Select(x => x.Name);
         }
 
-        [HttpGet("{resource}")]
-        public object Get(string resource)
+        [HttpGet("{blobName}")]
+        public object Get(string blobName)
         {
-            return _configuration.AsEnumerable().OrderBy(k => k.Key).Select(k => k.Key);
+            return blobName;
         }
 
         [HttpPost]
         public Task Post()
         {
-            var blockBlob = _blobContainer.GetBlockBlobReference("blob-" + Guid.NewGuid());
+            var blockBlob = GetContainer().GetBlockBlobReference("blob-" + Guid.NewGuid());
 
             return blockBlob.UploadTextAsync(blockBlob.Name);
         }
@@ -57,16 +56,21 @@ namespace dotnetcore.Controllers
         [HttpDelete]
         public async void Delete()
         {
-            var blobs = await _blobContainer.ListBlobsSegmentedAsync(null);
+            var blobs = await GetContainer().ListBlobsSegmentedAsync(null);
 
             foreach (var blob in blobs.Results)
             {
                 if (blob.GetType() == typeof(CloudBlockBlob))
                 {
-                    var blockBlob = (CloudBlockBlob) blob;
+                    var blockBlob = (CloudBlockBlob)blob;
                     await blockBlob.DeleteAsync();
                 }
             }
+        }
+
+        private string ContainerName()
+        {
+            return (string)this.RouteData.Values.GetValueOrDefault("containerName");
         }
     }
 

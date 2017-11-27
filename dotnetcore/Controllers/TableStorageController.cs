@@ -12,14 +12,16 @@ namespace dotnetcore.Controllers
     [Route("api/[controller]")]
     public class TableStorageController : Controller
     {
+        private readonly IConfiguration _configuration; 
         private readonly CloudTable _testTable;
 
         public TableStorageController(IConfiguration configuration)
         {
-            var account = CloudStorageAccount.Parse(configuration["StorageConnectionString"]);
+            _configuration = configuration;
+            var account = CloudStorageAccount.Parse(_configuration["StorageConnectionString"]);
             var tableClient = account.CreateCloudTableClient();
 
-            _testTable = tableClient.GetTableReference("Test");
+            _testTable = tableClient.GetTableReference("Tester");
             _testTable.CreateIfNotExistsAsync().Wait();
         }
 
