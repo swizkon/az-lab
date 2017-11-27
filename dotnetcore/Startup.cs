@@ -50,12 +50,6 @@ namespace dotnetcore
             app.UseDefaultFiles()
                 .UseStaticFiles()
                 .UseMvc();
-
-            Console.WriteLine("StorageConnectionString");
-            Console.WriteLine(Configuration["StorageConnectionString"]);
-
-            Console.WriteLine("ConfigurationSource");
-            Console.WriteLine(Configuration["ConfigurationSource"]);
         }
     }
 }

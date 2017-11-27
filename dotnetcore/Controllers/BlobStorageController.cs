@@ -40,17 +40,30 @@ namespace dotnetcore.Controllers
         }
 
         [HttpGet("{blobName}")]
-        public object Get(string blobName)
+        public async Task<CreditNoteDocument> Get(string blobName)
         {
-            return blobName;
+            var blockBlob = GetContainer().GetBlockBlobReference(blobName);
+
+            var contents = await blockBlob.DownloadTextAsync();
+
+            var data = Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNoteDocument>(contents);
+
+            return data;
         }
 
         [HttpPost]
         public Task Post()
         {
+            var data = new CreditNoteDocument()
+            {
+                 AccountId = Environment.TickCount
+            };
+            data.Transactions.Add(3);
+
+            var contents = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             var blockBlob = GetContainer().GetBlockBlobReference("blob-" + Guid.NewGuid());
 
-            return blockBlob.UploadTextAsync(blockBlob.Name);
+            return blockBlob.UploadTextAsync(contents);
         }
 
         [HttpDelete]
@@ -75,16 +88,11 @@ namespace dotnetcore.Controllers
     }
 
 
-    public class CreditNoteDocument : TableEntity
+    public class CreditNoteDocument
     {
-        public CreditNoteDocument(string pk, string rk)
-        {
-            PartitionKey = pk;
-            RowKey = rk;
-        }
-
         public CreditNoteDocument()
         {
+            Transactions = new List<long>();
         }
 
         public long AccountId { get; set; }
