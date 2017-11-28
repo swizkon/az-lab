@@ -8,9 +8,9 @@
       "direction": "in"
     },
     {
-      "name": "$return",
-      "type": "CloudQueue",
+      "type": "queue",
       "direction": "out",
+      "name": "$return",
       "queueName": "myqueue-items",
       "connection": "StorageConnectionString"
     }

@@ -1,5 +1,7 @@
 #r "Microsoft.WindowsAzure.Storage"
 #r "Newtonsoft.Json"
+#r "Microsoft.Azure.WebJobs"
+#r "System.Net"
 
 using System;
 using System.Net;
@@ -7,44 +9,47 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.Azure.WebJobs;
 
-
-public static void Run(HttpRequest req, CloudQueue outputQueue, TraceWriter log)
+public interface IResult
 {
-    log.Info("C# HTTP trigger function processed a request.");
+    HttpStatusCode Status { get; }
+}
+
+public class OkResult : IResult
+{
+    public HttpStatusCode Status => HttpStatusCode.OK;
+    public string Payload { get; set;} 
+
+    public OkResult(string data)
+    {
+        Payload = data;
+    }
+}
+
+public static IResult Run(HttpRequest req, TraceWriter log)
+{
+    log.Info("HttpTrigger does WriteToQueue"); 
 
     string name = req.Query["name"];
 
     string requestBody = new StreamReader(req.Body).ReadToEnd();
     dynamic data = JsonConvert.DeserializeObject(requestBody);
     name = name ?? data?.name;
-    
-    var message = new CloudQueueMessage(name);
-    outputQueue.AddMessage(message, TimeSpan.FromMinutes(3));
 
-    /*
-    return name != null
-        ? (ActionResult)new OkObjectResult($"Hello, {name}")
-        : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
-        */
-}
-
-
-/*
-
-[StorageAccount("AzureWebJobsStorage")]
-public static class QueueFunctions
-{
-    // HTTP trigger with queue output binding
-    [FunctionName("QueueOutput")]
-    [return: Queue("myqueue-items")]
-    public static string QueueOutput([HttpTrigger] dynamic input,  TraceWriter log)
+    try
     {
-        log.Info($"C# function processed: {input.Text}");
-        return input.Text;
+        return new OkResult(name);
+    }
+    catch (System.Exception ex)
+    {
+        log.Error(ex.Message);
+        // return ex.Message;
+        return new OkResult(ex.Message);
     }
 }
 
+/*
 
 public static void Run(MyType myEventHubMessage, CloudQueue outputQueue, TraceWriter log)
 {
