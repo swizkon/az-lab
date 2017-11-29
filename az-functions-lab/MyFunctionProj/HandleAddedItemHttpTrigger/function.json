@@ -1,0 +1,30 @@
+{
+  "disabled": false,
+  "bindings": [
+    {
+      "authLevel": "function",
+      "name": "req",
+      "type": "httpTrigger",
+      "direction": "in"
+    },
+    {
+      "type": "queue",
+      "direction": "out",
+      "name": "newItem",
+      "queueName": "new-items",
+      "connection": "StorageConnectionString"
+    },
+    {
+      "tableName": "AutoscoutItems",
+      "connection": "StorageConnectionString",
+      "name": "autoscoutItem",
+      "type": "table",
+      "direction": "out"
+    },
+    {
+      "name": "$return",
+      "type": "http",
+      "direction": "out"
+    }
+  ]
+}
