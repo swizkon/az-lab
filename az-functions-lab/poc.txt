@@ -1,0 +1,17 @@
+
+Item added -> AddedItemsQueue
+Item checked (completed) -> CompletedItemsQueue (ItemId, )
+                         -> CalculateNext
+
+
+ItemsTable
+    partition:  ListId
+    row key:    ItemId
+    Prop:       Title
+
+
+CompletedItemsTable
+    partition:  ItemId
+    row key:    CompletionTimestamp
+    Prop:       Title
+    Prop:       ListId
