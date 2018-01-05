@@ -15,10 +15,10 @@
       "connection": "StorageConnectionString"
     },
     {
+      "type": "table",
       "tableName": "AutoscoutItems",
       "connection": "StorageConnectionString",
       "name": "autoscoutItem",
-      "type": "table",
       "direction": "out"
     },
     {

@@ -3,7 +3,7 @@
 Debt Collection Export
 
 Partner setup: 
-
+ 
 
 !Köp
     - State: NewCapitalDebt

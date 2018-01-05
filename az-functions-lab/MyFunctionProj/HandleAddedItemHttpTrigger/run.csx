@@ -1,19 +1,13 @@
 #r "Newtonsoft.Json"
 
+#load "../Shared/Models.csx"
+
 using System;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 
-
-public class AutoscoutItem
-{
-    public string PartitionKey { get; set; }
-    public string RowKey { get; set; }
-    
-    public string Title { get; set; }
-}
 
 public static IActionResult Run(HttpRequest req, TraceWriter log, out string newItem, out AutoscoutItem autoscoutItem)
 {
@@ -31,8 +25,9 @@ public static IActionResult Run(HttpRequest req, TraceWriter log, out string new
     autoscoutItem.PartitionKey = "Autoscout";
     autoscoutItem.RowKey = Guid.NewGuid().ToString();
     autoscoutItem.Title = name;
+    autoscoutItem.List = "TheList";
 
     return name != null 
-        ? (ActionResult)new OkObjectResult($"Hello, {name}")
+        ? (ActionResult)new OkObjectResult($"Hello, {autoscoutItem.Title} {autoscoutItem.List}")
         : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
 }

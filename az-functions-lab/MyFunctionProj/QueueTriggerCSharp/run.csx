@@ -1,3 +1,5 @@
+#load "../Shared/Models.csx"
+
 using System;
 using System.Net;
 
