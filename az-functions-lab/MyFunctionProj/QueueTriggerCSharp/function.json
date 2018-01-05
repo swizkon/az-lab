@@ -5,7 +5,7 @@
       "name": "myQueueItem",
       "type": "queueTrigger",
       "direction": "in",
-      "queueName": "myqueue-items",
+      "queueName": "new-items",
       "connection": "StorageConnectionString"
     }
   ]

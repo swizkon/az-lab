@@ -8,4 +8,4 @@ For a `QueueTrigger` to work, you must provide a queue name that defines the que
 
 ## Learn more
 
-<TODO> DocumentationDocumentation
+<TODO> Documentation

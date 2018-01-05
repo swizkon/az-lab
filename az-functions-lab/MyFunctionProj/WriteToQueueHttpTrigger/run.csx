@@ -29,13 +29,11 @@ public class OkResult : IResult
 
 public static IResult Run(HttpRequest req, TraceWriter log)
 {
-    log.Info("HttpTrigger does WriteToQueue"); 
-
-    string name = req.Query["name"];
+    log.Info("HttpTrigger does WriteToQueue");
 
     string requestBody = new StreamReader(req.Body).ReadToEnd();
     dynamic data = JsonConvert.DeserializeObject(requestBody);
-    name = name ?? data?.name;
+    var name = data?.name;
 
     try
     {

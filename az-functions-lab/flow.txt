@@ -1,0 +1,51 @@
+
+
+Debt Collection Export
+
+Partner setup: 
+
+
+!Köp
+    - State: NewCapitalDebt
+    - Transaction: Purchase
+    - Transaction: CampaignFee
+
+!Avisera
+    - State: First
+    - Transaction: NotificationFee
+    
+!Avisera
+     -State: Reminder
+    - Transaction: ReminderFee
+    
+!Avisera
+    - State: FinalReminder
+    - Transaction: ReminderFee
+    
+!Avisera
+    - State: DebtCollectionExported
+    - Transaction: -ReminderFee
+    - Transaction: -NotificationFee
+    - Transaction: -CampaignFee
+    - Transaction: -CustomerLoss
+
+
+
+
+
+
+!Debt export
+
+- Skuld-hinkar (Debt export, slask?)
+
+(Time passes)
+
+
+
+
+
+
+
+
+
+PAYMENTS?

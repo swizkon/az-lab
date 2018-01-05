@@ -12,7 +12,7 @@ public static IActionResult Run(HttpRequest req, TraceWriter log)
     string name = req.Query["name"];
 
     string requestBody = new StreamReader(req.Body).ReadToEnd();
-    dynamic data = JsonConvert.DeserializeObject(requestBody);
+    dynamic data = requestBody != "" ? JsonConvert.DeserializeObject(requestBody) : null;
     name = name ?? data?.name;
 
     return name != null

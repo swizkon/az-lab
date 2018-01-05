@@ -15,3 +15,31 @@ CompletedItemsTable
     row key:    CompletionTimestamp
     Prop:       Title
     Prop:       ListId
+
+
+
+
+
+
+-----------------------------
+|                           |
+|                           |
+|                           |
+|                           |
+|                           |           --->
+|                           |   Account state changed
+|                           |
+|                           |
+|                           |
+|                           |
+|                           |
+-----------------------------
+
+
+
+
+
+
+
+Ts                            StateChange 
+                                ------->

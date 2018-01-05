@@ -28,7 +28,7 @@ public static IActionResult Run(HttpRequest req, TraceWriter log, out string new
     newItem = name;
 
     autoscoutItem = new AutoscoutItem();
-    autoscoutItem.PartitionKey = "";
+    autoscoutItem.PartitionKey = "Autoscout";
     autoscoutItem.RowKey = Guid.NewGuid().ToString();
     autoscoutItem.Title = name;
 
